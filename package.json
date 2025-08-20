@@ -20,11 +20,16 @@
   "homepage": "https://github.com/gabrielgamboa/foodiary-api#readme",
   "devDependencies": {
     "@types/node": "^24.2.1",
+    "drizzle-kit": "^0.31.4",
     "serverless-offline": "^14.4.0",
+    "tsx": "^4.20.4",
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
     "@types/aws-lambda": "^8.10.152",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.4",
     "zod": "^4.0.17"
   }
 }
