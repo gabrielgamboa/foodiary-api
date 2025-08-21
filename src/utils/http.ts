@@ -24,7 +24,7 @@ export function badRequest(body?: Record<string, any>): HttpResponse {
 
 export function conflictRequest(body?: Record<string, any>): HttpResponse {
   return {
-    statusCode: 400,
+    statusCode: 409,
     body: body ?? {},
   }
 }
