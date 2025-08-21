@@ -9,7 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gabrielgamboa/foodiary-api.git"
+    "url": "git+https://github.com/gabrielgamboa/foodiary-api.git",
+    "update-db": "npx drizzle-kit push"
   },
   "keywords": [],
   "author": "",

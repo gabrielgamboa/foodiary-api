@@ -21,3 +21,10 @@ export function badRequest(body?: Record<string, any>): HttpResponse {
     body: body ?? {},
   }
 }
+
+export function conflictRequest(body?: Record<string, any>): HttpResponse {
+  return {
+    statusCode: 400,
+    body: body ?? {},
+  }
+}
