@@ -1,4 +1,4 @@
-import { HttpResponse } from "../types/http-response";
+import { HttpResponse } from "../shared/types/http-response";
 
 export function ok(body?: Record<string, any>): HttpResponse {
   return {

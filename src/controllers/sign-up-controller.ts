@@ -1,10 +1,13 @@
 import z from "zod";
-import { HttpRequest } from "../types/http-request";
-import { HttpResponse } from "../types/http-response";
+import { HttpRequest } from "../shared/types/http-request";
+import { HttpResponse } from "../shared/types/http-response";
 import { badRequest, conflictRequest, created } from "../utils/http";
 import { db } from "../infra/db";
 import { eq } from "drizzle-orm";
 import { usersTable } from "../infra/db/schema";
+import { hash } from 'bcryptjs';
+import { SignUpUseCase } from "../usecases/sign-up-usecase";
+import { EntityAlreadyExistsError } from "../shared/errors/entity-already-exists-error";
 
 const singUpSchema = z.object({
   goal: z.enum(['LOSE', 'MAINTAIN', 'GAIN']),
@@ -21,27 +24,24 @@ const singUpSchema = z.object({
 })
 
 export class SignUpController {
+  constructor(
+    private readonly signUpUseCase: SignUpUseCase
+  ) { }
+
   async handle({ body }: HttpRequest): Promise<HttpResponse> {
     const { success, error, data } = singUpSchema.safeParse(body);
     if (!success) {
       return badRequest({ errors: error.issues })
     }
-    const userAlreadyExists = await db.query.usersTable.findFirst({
-      columns: {
-        email: true,
-      },
-      where: eq(usersTable.email, data.account.email),
-    });
-    if (userAlreadyExists) return conflictRequest({ error: "User Already exists with this email" });
-    const [user] = await db.insert(usersTable).values({
-      ...data,
-      ...data.account,
-      calories: 0,
-      proteins: 0,
-      carbohydrates: 0,
-      fats: 0
-    }).returning({ id: usersTable.id })
+    try {
+      const { userId } = await this.signUpUseCase.execute(data);
+      return created({ userId })
+    } catch (error) {
+      if (error instanceof EntityAlreadyExistsError) {
+        return conflictRequest({ error: error.message })
+      }
 
-    return created({ userId: user?.id })
+      return badRequest({ error: error instanceof Error ? error.message : String(error) })
+    }
   }
 }
