@@ -22,6 +22,13 @@ export function badRequest(body?: Record<string, any>): HttpResponse {
   }
 }
 
+export function unauthorized(body?: Record<string, any>): HttpResponse {
+  return {
+    statusCode: 401,
+    body: body ?? {},
+  }
+}
+
 export function conflictRequest(body?: Record<string, any>): HttpResponse {
   return {
     statusCode: 409,
