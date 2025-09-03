@@ -29,7 +29,6 @@ export class SignInUseCase {
       { expiresIn: '3d' }
     )
 
-    console.log({ accessToken, id: user.id, password: user.password })
     return { accessToken }
   }
 }

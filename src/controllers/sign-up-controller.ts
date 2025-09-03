@@ -34,8 +34,8 @@ export class SignUpController {
       return badRequest({ errors: error.issues })
     }
     try {
-      const { userId } = await this.signUpUseCase.execute(data);
-      return created({ userId })
+      const { accessToken } = await this.signUpUseCase.execute(data);
+      return created({ accessToken })
     } catch (error) {
       if (error instanceof EntityAlreadyExistsError) {
         return conflictRequest({ error: error.message })

@@ -3,6 +3,7 @@ import { db } from "../infra/db";
 import { usersTable } from "../infra/db/schema";
 import { hash } from "bcryptjs";
 import { EntityAlreadyExistsError } from "../shared/errors/entity-already-exists-error";
+import { sign } from "jsonwebtoken";
 
 export interface SignUpUseCaseDTO {
   goal: string;
@@ -19,7 +20,7 @@ export interface SignUpUseCaseDTO {
 }
 
 export class SignUpUseCase {
-  async execute(data: SignUpUseCaseDTO): Promise<{ userId: string }> {
+  async execute(data: SignUpUseCaseDTO): Promise<{ accessToken: string }> {
     const userAlreadyExists = await db.query.usersTable.findFirst({
       columns: {
         email: true,
@@ -38,6 +39,12 @@ export class SignUpUseCase {
       fats: 0
     }).returning({ id: usersTable.id })
 
-    return { userId: user?.id! }
+    const accessToken = sign(
+      { sub: user?.id },
+      process.env.JWT_SECRET!,
+      { expiresIn: '3d' }
+    )
+
+    return { accessToken }
   }
 }
