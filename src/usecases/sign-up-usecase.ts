@@ -4,10 +4,11 @@ import { usersTable } from "../infra/db/schema";
 import { hash } from "bcryptjs";
 import { EntityAlreadyExistsError } from "../shared/errors/entity-already-exists-error";
 import { sign } from "jsonwebtoken";
+import { calculateGoals } from "../lib/calculateGoal";
 
 export interface SignUpUseCaseDTO {
-  goal: string;
-  gender: string;
+  goal: "lose" | "gain" | "maintain";
+  gender: "male" | "female";
   birthDate: string;
   height: number;
   weight: number;
@@ -28,15 +29,22 @@ export class SignUpUseCase {
       where: eq(usersTable.email, data.account.email),
     });
     if (userAlreadyExists) throw new EntityAlreadyExistsError("user");
+
+    const goals = calculateGoals({
+      activityLevel: data.activityLevel,
+      birthDate: new Date(data.birthDate),
+      gender: data.gender,
+      goal: data.goal,
+      height: data.height,
+      weight: data.weight,
+    })
+
     const hashedPassword = await hash(data.account.password, 10);
     const [user] = await db.insert(usersTable).values({
       ...data,
       ...data.account,
+      ...goals,
       password: hashedPassword,
-      calories: 0,
-      proteins: 0,
-      carbohydrates: 0,
-      fats: 0
     }).returning({ id: usersTable.id })
 
     const accessToken = sign(
