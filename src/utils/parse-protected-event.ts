@@ -10,10 +10,6 @@ export class ParseProtectedEvent {
     if (!authorization) throw new Error('Access Token not provided');
     const [, token] = authorization.split(' ');
     const { sub } = verify(token!, process.env.JWT_SECRET!) as JwtPayload;
-    console.log({
-      ...baseEvent,
-      userId: sub as string
-    })
     return {
       ...baseEvent,
       userId: sub as string
