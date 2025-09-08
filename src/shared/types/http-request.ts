@@ -3,3 +3,7 @@ export type HttpRequest = {
   queryParams: Record<string, any>;
   params: Record<string, any>;
 }
+
+export type ProtectedHttpRequest = HttpRequest & {
+  userId: string
+}
