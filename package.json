@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/gabrielgamboa/foodiary-api#readme",
   "devDependencies": {
-    "@types/node": "^24.2.1",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.2.1",
     "drizzle-kit": "^0.31.4",
     "serverless-offline": "^14.4.0",
     "tsx": "^4.20.4",

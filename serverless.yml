@@ -12,7 +12,7 @@ provider:
   runtime: nodejs22.x
   architecture: arm64
   environment:
-    #getting from .env
+    #GETting from .env
     DATABASE_URL: ${env:DATABASE_URL}
     JWT_SECRET: ${env:JWT_SECRET}
 
@@ -29,18 +29,33 @@ functions:
     handler: src/functions/sign-in.handler
     events:
       - httpApi:
+          method: POST
           path: /sign-in
-          method: post
   sign-up:
     handler: src/functions/sign-up.handler
     events:
       - httpApi:
+          method: POST
           path: /sign-up
-          method: post
           
   me:
     handler: src/functions/me.handler
     events:
       - httpApi:
+          method: GET
           path: /me
-          method: get
+          
+
+  create-meal:
+    handler: src/functions/create-meal.handler
+    events:
+      - httpApi:
+          method: POST
+          path: /meals
+
+  list-meals:
+    handler: src/functions/list-meals.handler
+    events:
+      - httpApi:
+          method: GET
+          path: /meals
